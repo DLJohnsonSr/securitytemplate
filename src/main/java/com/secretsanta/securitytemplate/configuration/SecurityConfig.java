@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserRepository userRepo;
+    private UserRepository userRepo;
 
     @Bean
     PasswordEncoder passwordEncoder(){
@@ -45,24 +45,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
+                // for custom login page
 //                .formLogin().loginPage("/login").defaultSuccessUrl("/").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 
-        http.csrf().disable();
+        http.csrf().disable(); // Only for H2 Console, NOT FOR PRODUCTION
 
-        http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable(); // Only for the H2 console, NOT For PRODUCTION
     }
 
-//    REMOVE BEFORE PUBLISHING!!!!!!!!!!
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
+        //    REMOVE BEFORE PUBLISHING!!!!!!!!!!
         auth.inMemoryAuthentication().withUser("Test")
                 .password(passwordEncoder().encode("test")).authorities("USER","SOMEONE","ADMIN")
                 .and()
                 .passwordEncoder(passwordEncoder());
 
+        //Allows database authentication
         auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(passwordEncoder());
     }
 }

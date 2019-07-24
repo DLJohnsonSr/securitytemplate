@@ -1,7 +1,7 @@
 package com.secretsanta.securitytemplate.configuration;
 
-import com.secretsanta.securitytemplate.models.AppRole;
-import com.secretsanta.securitytemplate.models.AppUser;
+import com.secretsanta.securitytemplate.models.Role;
+import com.secretsanta.securitytemplate.models.User;
 import com.secretsanta.securitytemplate.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +30,7 @@ public class SSUSD implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         try {
-            AppUser thisUser = userRepo.findByUsername(username);
+            User thisUser = userRepo.findByUsername(username);
             if (thisUser == null){
                 return null;
             }
@@ -43,9 +43,9 @@ public class SSUSD implements UserDetailsService {
         }
     }
 
-    private Set<GrantedAuthority> getAuthorites(AppUser thisUser){
-        Set<GrantedAuthority>authorities = new HashSet<GrantedAuthority>();
-        for(AppRole eachRole : thisUser.getRoles()){
+    private Set<GrantedAuthority> getAuthorites(User thisUser){
+        Set<GrantedAuthority>authorities = new HashSet<>();
+        for(Role eachRole : thisUser.getRoles()){
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(eachRole.getRoleName());
             authorities.add(grantedAuthority);
         }

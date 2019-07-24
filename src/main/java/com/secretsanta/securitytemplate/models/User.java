@@ -5,12 +5,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class AppUser {
+public class User {
 
     @Transient
     private PasswordEncoder passwordEncoder;
@@ -26,22 +29,25 @@ public class AppUser {
     private long id;
 
     @Column(unique = true)
-    @NotNull
+    @NotEmpty
+    @NotBlank
+    @Size(min = 3, max = 30)
     private String username;
 
-    @NotNull
+    @NotEmpty
+    @NotBlank
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
-    private Set<AppRole> roles;
+    private Set<Role> roles;
 
-    public AppUser() {
+    public User() {
         passwordEncoder = passwordEncoder();
         this.roles = new HashSet<>();
     }
 
-    public AppUser(String username, String password, AppRole role) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.roles = new HashSet<>();
@@ -82,15 +88,15 @@ public class AppUser {
         this.password = password;
     }
 
-    public Set<AppRole> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<AppRole> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
-    public void addRoles(AppRole role){
+    public void addRoles(Role role){
         this.roles.add(role);
     }
 }

@@ -1,9 +1,9 @@
 package com.secretsanta.securitytemplate.repositories;
 
-import com.secretsanta.securitytemplate.models.AppUser;
+import com.secretsanta.securitytemplate.models.User;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<AppUser, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
-    AppUser findByUsername(String username);
+    User findByUsername(String username);
 }
